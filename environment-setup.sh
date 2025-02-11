@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# Script must run with sudo permissions
+# Script must run with sudo permissions.
+#
+# Project template will be created in the current directory of the
+# terminal invoking this script.
+######################################################################
 
 # get updated package lists
 apt-get update
@@ -20,9 +24,27 @@ if [[ $vs_code_version == *"not found"* ]]; then
   echo "Visual Studio Code install failed"
   exit 1
 fi
+
+# install .NET SDK v8.0
+apt-get install dotnet-sdk-8.0
+
 # use Visual Studio Code's provided commands to install
 # requisite extensions
-#WIP
+code --install-extension ms-dotnettools.csdevkit github.vscode-github-actions 
 
+# create the project directory structure
+mkdir ProjectRoot
+cd ProjectRoot
+mkdir ConsoleAppProj AppTestProj
+cd ConsoleAppProj
+# create console app from .NET template (.NET v8.0, no top-level statements)
+dotnet new console -f net8.0 --use-program-main
+
+# create separate project for unit testing
+cd ../AppTestProj
+dotnet new mstest -f net8.0 --use-program-main
+
+# add reference of Console App to Test Project in .csproj of the latter
+#WIP
 
 exit 0
